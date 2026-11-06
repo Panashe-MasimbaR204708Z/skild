@@ -8,5 +8,6 @@
     createdAt: string,
     authorClerkId: string,
     authorEmail: string,
-
+    upvoteCount?: number,
+    commentCount?: number,
  }

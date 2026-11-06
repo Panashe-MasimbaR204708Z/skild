@@ -12,10 +12,11 @@ import {
 const SkillCard = ({
   authorEmail,
   category,
+  commentCount,
   createdAt,
   description,
   installCommand,
-  tags,
+  upvoteCount,
   title,
 }: SkillRecord) => {
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>(
@@ -53,7 +54,7 @@ const SkillCard = ({
       <Link
         to='/skills'
         tabIndex={-1}
-        aria-label={`Open ${title}`}
+        aria-label={`Browse ${title} in the registry`}
         className='overlay'
       />
 
@@ -70,17 +71,25 @@ const SkillCard = ({
       <div className='body'>
         <div className='meta'>
           <div className='author'>
-            <img src='/logo512.png' alt='Author avatar' className='avatar' />
+            <img src='/author-avatar.svg' alt='Author avatar' className='avatar' />
             <div className='author-copy'>
               <p>{authorEmail.split('@')[0]}</p>
-              <p>{new Date(createdAt).toLocaleDateString()}</p>
+              <p>
+                {new Date(createdAt).toLocaleDateString('en-US', {
+                  timeZone: 'UTC',
+                })}
+              </p>
             </div>
           </div>
           <p className='category'>{category}</p>
         </div>
 
         <div className='summary'>
-          <Link to='/skills' className='title-link'>
+          <Link
+            to='/skills'
+            className='title-link'
+            aria-label={`Browse ${title} in the registry`}
+          >
             <h3>{title}</h3>
           </Link>
           <p>{description}</p>
@@ -96,10 +105,19 @@ const SkillCard = ({
             className='copy'
             onClick={copyCommand}
             aria-label='Copy install command'
-            title={copyStatus === 'copied' ? 'Copied' : 'Copy command'}
+            title={
+              copyStatus === 'copied'
+                ? 'Copied'
+                : copyStatus === 'error'
+                  ? 'Copy failed'
+                  : 'Copy command'
+            }
           >
             {copyStatus === 'copied' ? <Check size={16} /> : <Copy size={16} />}
           </button>
+          {copyStatus === 'error' && (
+            <span className='copy-error'>Could not copy command.</span>
+          )}
           <span className='sr-only' aria-live='polite'>
             {copyStatus === 'copied'
               ? 'Install command copied.'
@@ -118,20 +136,20 @@ const SkillCard = ({
               disabled
             >
               <ArrowBigUp size={16} fill='currentColor' />
-              <span>{tags.length}</span>
+              {upvoteCount !== undefined && <span>{upvoteCount}</span>}
             </button>
             <div className='comments'>
               <MessageSquare size={14} />
-              <span>{authorEmail ? 1 : 0}</span>
+              {commentCount !== undefined && <span>{commentCount}</span>}
             </div>
           </div>
           <div className='actions'>
             <Link
               to='/skills'
               className='open'
-              title={`Open ${title}`}
+              title='Browse the registry'
             >
-              <span>Open</span>
+              <span>Registry</span>
               <ArrowUpRight size={14} />
             </Link>
             <button

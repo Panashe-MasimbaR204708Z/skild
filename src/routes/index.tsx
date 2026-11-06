@@ -100,17 +100,25 @@ function Home() {
           <h2>
             Recently created <span className='text-gradient'>Skills</span>
           </h2>
-          <p>Latest skills loaded from database in descending order.</p>
+          <p>
+            Sample cards and install commands only. These are illustrative
+            examples, not live records or executable commands.
+          </p>
         </div>
 
         <div className='skills-grid'>
-          {skillFeed.map((skill) => (
-            <SkillCard
-              key={skill.id}
-              {...skill}
-              tags={[...skill.tags]}
-            />
-          ))}
+          {[...skillFeed]
+            .sort(
+              (first, second) =>
+                Date.parse(second.createdAt) - Date.parse(first.createdAt),
+            )
+            .map((skill) => (
+              <SkillCard
+                key={skill.id}
+                {...skill}
+                tags={[...skill.tags]}
+              />
+            ))}
         </div>
       </section>
     </div>
