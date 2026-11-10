@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SkillsRouteImport } from './routes/skills'
+import { Route as _authSignOutRouteImport } from './routes/__auth/sign-out'
 import { Route as SkillsNewRouteImport } from './routes/skills.new'
+import { Route as _authSignInSplatRouteImport } from './routes/__auth/sign-in.$'
+import { Route as _authSignUpSplatRouteImport } from './routes/__auth/sign-up.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,39 +26,75 @@ const SkillsRoute = SkillsRouteImport.update({
   path: '/skills',
   getParentRoute: () => rootRouteImport,
 } as any)
+const _authSignOutRoute = _authSignOutRouteImport.update({
+  id: '/__auth/sign-out',
+  path: '/sign-out',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SkillsNewRoute = SkillsNewRouteImport.update({
   id: '/new',
   path: '/new',
   getParentRoute: () => SkillsRoute,
 } as any)
+const _authSignInSplatRoute = _authSignInSplatRouteImport.update({
+  id: '/__auth/sign-in/$',
+  path: '/sign-in/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const _authSignUpSplatRoute = _authSignUpSplatRouteImport.update({
+  id: '/__auth/sign-up/$',
+  path: '/sign-up/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/skills': typeof SkillsRouteWithChildren
+  '/sign-out': typeof _authSignOutRoute
   '/skills/new': typeof SkillsNewRoute
+  '/sign-in/$': typeof _authSignInSplatRoute
+  '/sign-up/$': typeof _authSignUpSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/skills': typeof SkillsRouteWithChildren
+  '/sign-out': typeof _authSignOutRoute
   '/skills/new': typeof SkillsNewRoute
+  '/sign-in/$': typeof _authSignInSplatRoute
+  '/sign-up/$': typeof _authSignUpSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/skills': typeof SkillsRouteWithChildren
+  '/__auth/sign-out': typeof _authSignOutRoute
   '/skills/new': typeof SkillsNewRoute
+  '/__auth/sign-in/$': typeof _authSignInSplatRoute
+  '/__auth/sign-up/$': typeof _authSignUpSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/skills' | '/skills/new'
+  fullPaths:
+    '/' | '/skills' | '/sign-out' | '/skills/new' | '/sign-in/$' | '/sign-up/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/skills' | '/skills/new'
-  id: '__root__' | '/' | '/skills' | '/skills/new'
+  to:
+    '/' | '/skills' | '/sign-out' | '/skills/new' | '/sign-in/$' | '/sign-up/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/skills'
+    | '/__auth/sign-out'
+    | '/skills/new'
+    | '/__auth/sign-in/$'
+    | '/__auth/sign-up/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SkillsRoute: typeof SkillsRouteWithChildren
+  _authSignOutRoute: typeof _authSignOutRoute
+  _authSignInSplatRoute: typeof _authSignInSplatRoute
+  _authSignUpSplatRoute: typeof _authSignUpSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -74,12 +113,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkillsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/__auth/sign-out': {
+      id: '/__auth/sign-out'
+      path: '/sign-out'
+      fullPath: '/sign-out'
+      preLoaderRoute: typeof _authSignOutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/skills/new': {
       id: '/skills/new'
       path: '/new'
       fullPath: '/skills/new'
       preLoaderRoute: typeof SkillsNewRouteImport
       parentRoute: typeof SkillsRoute
+    }
+    '/__auth/sign-in/$': {
+      id: '/__auth/sign-in/$'
+      path: '/sign-in/$'
+      fullPath: '/sign-in/$'
+      preLoaderRoute: typeof _authSignInSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/__auth/sign-up/$': {
+      id: '/__auth/sign-up/$'
+      path: '/sign-up/$'
+      fullPath: '/sign-up/$'
+      preLoaderRoute: typeof _authSignUpSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -98,6 +158,9 @@ const SkillsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SkillsRoute: SkillsRouteWithChildren,
+  _authSignOutRoute: _authSignOutRoute,
+  _authSignInSplatRoute: _authSignInSplatRoute,
+  _authSignUpSplatRoute: _authSignUpSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { LogIn } from "lucide-react"
+import { Show, UserButton } from '@clerk/tanstack-react-start'
+import { Link } from '@tanstack/react-router'
+import { LogIn } from 'lucide-react'
 
 
 const Navbar = () => (
@@ -13,11 +14,20 @@ const Navbar = () => (
             <span className="name">Skild</span> 
         </Link>
       </div>
-      <div className='actions'>
-        <Link to="/sign-in/$" className="btn btn-primary">
-        <LogIn/>
-          Sign In
-        </Link>
+      <div className="actions">
+        <Show when="signed-in">
+          <UserButton />
+        </Show>
+        <Show when="signed-out">
+          <Link
+            className="btn-primary"
+            params={{ _splat: '' }}
+            to="/sign-in/$"
+          >
+            <LogIn size={16} />
+            <span>Sign In</span>
+          </Link>
+        </Show>
       </div>
     
     </nav>

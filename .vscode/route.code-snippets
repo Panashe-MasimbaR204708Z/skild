@@ -1,0 +1,18 @@
+{
+  "TanStack Router route": {
+    "scope": "typescriptreact",
+    "prefix": "tanstack-route",
+    "body": [
+      "import { createFileRoute } from '@tanstack/react-router'",
+      "",
+      "export const Route = createFileRoute('${1:/route/path}')({",
+      "  component: RouteComponent,",
+      "})",
+      "",
+      "function RouteComponent() {",
+      "  return <div>${2:Hello}</div>",
+      "}"
+    ],
+    "description": "Scaffold a TanStack React Router file route"
+  }
+}
