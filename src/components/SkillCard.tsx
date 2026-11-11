@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { usePostHog } from '@posthog/react'
 import {
   ArrowBigUp,
   ArrowUpRight,
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react'
 
 const SkillCard = ({
+  id,
   authorEmail,
   category,
   commentCount,
@@ -23,6 +25,8 @@ const SkillCard = ({
     'idle',
   )
   const copyStatusTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const posthog = usePostHog()
+  const posthogLogger = posthog?.logger
 
   useEffect(
     () => () => {
@@ -36,6 +40,14 @@ const SkillCard = ({
   const copyCommand = async () => {
     try {
       await navigator.clipboard.writeText(installCommand)
+      posthog?.capture('skill_install_command_copied', {
+        skill_id: id,
+        skill_category: category,
+      })
+      posthogLogger?.info('skill install command copied', {
+        skill_id: id,
+        skill_category: category,
+      })
       setCopyStatus('copied')
       if (copyStatusTimer.current) {
         clearTimeout(copyStatusTimer.current)
@@ -45,6 +57,10 @@ const SkillCard = ({
       }, 1500)
     } catch (error) {
       console.error('Failed to copy install command:', error)
+      posthogLogger?.warn('skill install command copy failed', {
+        skill_id: id,
+        skill_category: category,
+      })
       setCopyStatus('error')
     }
   }
